@@ -18,7 +18,7 @@ sub new {
     my $os_info = PVE::Tools::file_get_contents($os_release);
 
     my $version;
-	$version = "40450";
+	$version = "40480";
 
     my $self = { conf => $conf, rootdir => $rootdir, version => $version };
 
@@ -49,9 +49,9 @@ sub template_fixup {
 
     
 
-    # create shadow file to set root password
-    $self->ct_file_set_contents('/etc/passwd', '');
-    $self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
+    # create passwd and shadow file to set root password
+    $self->ct_file_set_contents('/etc/passwd', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
+    #$self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
 
     # tty
     my $filename = '/etc/udev/udev.conf';
@@ -134,6 +134,32 @@ sub setup_container_getty_service {
 
     # ensure getty.target is not masked
     $self->ct_unlink("/etc/systemd/system/getty.target");
+}
+
+sub set_user_password {
+    my ($self, $conf, $user, $opt_password) = @_;
+
+    my $pwfile = "/etc/passwd";
+
+    return if !$self->ct_file_exists($pwfile);
+
+    my $shadow = "/etc/shadow";
+    
+    if (defined($opt_password)) {
+        if ($opt_password !~ m/^\$(?:1|2[axy]?|5|6)\$[a-zA-Z0-9.\/]{1,16}\$[a-zA-Z0-9.\/]+$/) {
+            my $time = substr (Digest::SHA::sha1_base64 (time), 0, 8);
+            $opt_password = crypt(encode("utf8", $opt_password), "\$6\$$time\$");
+        };
+    } else {
+	    $opt_password = '*';
+    }
+    
+    if ($self->ct_file_exists($shadow)) {
+	    &$replacepw ($self, $shadow, $user, $opt_password, 1);
+	    &$replacepw ($self, $pwfile, $user, 'x');
+    } else {
+	    &$replacepw ($self, $pwfile, $user, $opt_password);
+    }
 }
 
 1;
