@@ -17,3 +17,6 @@ Or this one liner
 ```
 curl -s https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/install.sh | bash
 ```
+## Bugs
+- Privileged containers need to manually set "nesting=1" or systemd is not working
+- cmode=shell is needed as it always created links to /dev/lxc/ttyN instead of /dev/ttyN and I have no idea why
