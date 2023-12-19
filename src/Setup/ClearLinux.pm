@@ -44,8 +44,8 @@ sub template_fixup {
     $self->ct_mkdir('/etc/systemd/system/getty.target.wants', 0755);
     
     # create passwd and shadow file to set root password
-    $self->ct_file_set_contents('/etc/passwd', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:19675:0:99999:7:::');
-    #$self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:19675:0:99999:7:::');
+    $self->ct_file_set_contents('/etc/passwd', 'root:x:0:0:root:/root:/bin/bash');
+    $self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:19675:0:99999:7:::');
 }
 
 sub setup_init {
