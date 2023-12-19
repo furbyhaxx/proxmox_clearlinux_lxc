@@ -41,14 +41,17 @@ sub template_fixup {
     $self->ct_mkdir('/etc/systemd', 0755);
     $self->ct_mkdir('/etc/systemd/system', 0755);
     $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants', 0755);
-     $self->ct_mkdir('/etc/systemd/system/getty.target.wants', 0755);
+    $self->ct_mkdir('/etc/systemd/system/getty.target.wants', 0755);
+
+    
 
     #$self->ct_symlink('/lib/systemd/system/container-getty@.service', '/etc/systemd/system/multi-user.target.wants/systemd-networkd.service');
 
     
 
-    # create empty shadow file to set root password
-    $self->ct_file_set_contents('/etc/shadow', '');
+    # create shadow file to set root password
+    $self->ct_file_set_contents('/etc/passwd', '');
+    $self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
 
     # tty
     my $filename = '/etc/udev/udev.conf';
