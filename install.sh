@@ -23,7 +23,7 @@ hash pveversion 2>/dev/null || {
 PVEVersion=$(pveversion --verbose | grep pve-manager | cut -c 14- | cut -c -6) # Below pveversion pre-run check
 PVEVersionMajor=$(echo $PVEVersion | cut -d'-' -f1)
 
-if ! [[ grep -q clear-linux.os "$SETUP_FILE" ]]; then
+if ! grep -q clear-linux-os "$SETUP_FILE"; then
     # backup Setup.pm
     cp $SETUP_FILE $SETUP_FILE.bak
 
@@ -33,9 +33,9 @@ if ! [[ grep -q clear-linux.os "$SETUP_FILE" ]]; then
     sed -i $'/.*unmanaged =>.*/i clear => \'PVE::LXC::Setup::ClearLinux\',' $SETUP_FILE
 fi
 
-if ![[test -f "$CLEARLINUX_FILE"]]; then
+if ! test -f "$CLEARLINUX_FILE"; then
     # copy ClearLinux.pm
-    cp ./src/Setup/ClearLinux.pm $CLEARLINUX_FILE
+    curl -K "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/src/Setup/ClearLinux.pm" -o $CLEARLINUX_FILE
 fi
 
 # restart pve-manager to use changes

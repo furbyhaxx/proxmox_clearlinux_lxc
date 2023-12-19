@@ -15,5 +15,5 @@ The installation is done via the CLI utility. Run the following commands on the 
 ```
 Or this one liner
 ```
-bash <(curl -s https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/install.sh )
+curl -s https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/install.sh | bash
 ```
