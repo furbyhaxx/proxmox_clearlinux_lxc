@@ -37,16 +37,20 @@ sub template_fixup {
 
     my $version = $self->{version};
 
-	# create basic config directories not preset in cl due to stateless design
-	$self->ct_mkdir('/etc/systemd', 0755);
+    # create basic config directories not preset in cl due to stateless design
+    $self->ct_mkdir('/etc/systemd', 0755);
     $self->ct_mkdir('/etc/systemd/system', 0755);
+
+    # create empty shadow file to set root password
+    $self->ct_file_set_contents('/etc/shadow', '');
 
     # tty
     my $filename = '/etc/udev/udev.conf';
-    my $data = $self->ct_file_get_contents($filename);
-    $self->ct_file_set_contents($filename, $data);
-
-
+    if ($self->ct_file_exists($filename)) {
+    	my $data = $self->ct_file_get_contents($filename);
+	$self->ct_file_set_contents($filename, $data);
+    }
+    
 	# enable systemd-networkd
 	# $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants');
 	# $self->ct_mkdir('/etc/systemd/system/socket.target.wants');
@@ -54,7 +58,7 @@ sub template_fixup {
 	# 		  '/etc/systemd/system/multi-user.target.wants/systemd-networkd.service');
 	# $self->ct_symlink('/lib/systemd/system/systemd-networkd.socket',
 	# 		  '/etc/systemd/system/socket.target.wants/systemd-networkd.socket');
-
+	
 	# unlink default netplan lxc config
 	# $self->ct_unlink('/etc/netplan/10-lxc.yaml');
 }
@@ -65,7 +69,7 @@ sub setup_init {
     my $version = $self->{version};
 
     # enable networkd
-	$self->setup_systemd_preset({ 'systemd-networkd.service' => 1 });
+    $self->setup_systemd_preset({ 'systemd-networkd.service' => 1 });
 
     # setup getty service
     # $self->setup_container_getty_service($conf);
@@ -74,9 +78,8 @@ sub setup_init {
 sub setup_network {
     my ($self, $conf) = @_;
 
-	$self->ct_mkdir('/etc/systemd/network');
-
-	$self->setup_systemd_networkd($conf);
+    $self->ct_mkdir('/etc/systemd/network');
+    $self->setup_systemd_networkd($conf);
 }
 
 1;
