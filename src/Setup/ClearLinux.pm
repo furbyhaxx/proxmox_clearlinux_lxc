@@ -42,6 +42,10 @@ sub template_fixup {
     $self->ct_mkdir('/etc/systemd/system', 0755);
     $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants', 0755);
     $self->ct_mkdir('/etc/systemd/system/getty.target.wants', 0755);
+
+    # disable clr-service-restart as it has no use in an lxc
+    $self->ct_unlink("/usr/lib/systemd/system/update-triggers.target.wants/clr-service-restart-motd.service");
+    
     
     # create passwd and shadow file to set root password
     $self->ct_file_set_contents('/etc/passwd', 'root:x:0:0:root:/root:/bin/bash');
