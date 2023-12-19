@@ -42,34 +42,10 @@ sub template_fixup {
     $self->ct_mkdir('/etc/systemd/system', 0755);
     $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants', 0755);
     $self->ct_mkdir('/etc/systemd/system/getty.target.wants', 0755);
-
     
-
-    #$self->ct_symlink('/lib/systemd/system/container-getty@.service', '/etc/systemd/system/multi-user.target.wants/systemd-networkd.service');
-
-    
-
     # create passwd and shadow file to set root password
-    $self->ct_file_set_contents('/etc/passwd', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
-    #$self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:0:19675:99999:7:::');
-
-    # tty
-    my $filename = '/etc/udev/udev.conf';
-    if ($self->ct_file_exists($filename)) {
-    	my $data = $self->ct_file_get_contents($filename);
-	$self->ct_file_set_contents($filename, $data);
-    }
-    
-	# enable systemd-networkd
-	# $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants');
-	# $self->ct_mkdir('/etc/systemd/system/socket.target.wants');
-	# $self->ct_symlink('/lib/systemd/system/systemd-networkd.service',
-	# 		  '/etc/systemd/system/multi-user.target.wants/systemd-networkd.service');
-	# $self->ct_symlink('/lib/systemd/system/systemd-networkd.socket',
-	# 		  '/etc/systemd/system/socket.target.wants/systemd-networkd.socket');
-	
-	# unlink default netplan lxc config
-	# $self->ct_unlink('/etc/netplan/10-lxc.yaml');
+    $self->ct_file_set_contents('/etc/passwd', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:19675:0:99999:7:::');
+    #$self->ct_file_set_contents('/etc/shadow', 'root:\$6\$sy4bG3xvoajy.jDS$8fXRSN0hfGivaf7LqitFqaNqzg6M0kfP78uNx26jvuQUmGKzi7DqFqUiqRSSRyDoddwe70S7RmipEm2zKAhUd/:19675:0:99999:7:::');
 }
 
 sub setup_init {
