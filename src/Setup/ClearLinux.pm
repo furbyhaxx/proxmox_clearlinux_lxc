@@ -52,6 +52,12 @@ sub template_fixup {
 
 	# create basic config directories not preset in cl due to stateless design
 	$self->ct_mkdir('/etc/systemd', 0755);
+    $self->ct_mkdir('/etc/systemd/system', 0755);
+
+    # tty
+    my $filename = '/etc/udev/udev.conf';
+    my $data = $self->ct_file_get_contents($filename);
+    $self->ct_file_set_contents($filename, $data);
 
 
 	# enable systemd-networkd
@@ -71,7 +77,11 @@ sub setup_init {
 
     my $version = $self->{version};
 
+    # enable networkd
 	$self->setup_systemd_preset({ 'systemd-networkd.service' => 1 });
+
+    # setup getty service
+    $self->setup_container_getty_service($conf);
 }
 
 sub setup_network {
@@ -82,4 +92,13 @@ sub setup_network {
 	$self->setup_systemd_networkd($conf);
 }
 
+# A few distros as well as unprivileged containers cannot deal with the
+# /dev/lxc/ tty subdirectory.
+# sub devttydir {
+#     my ($self, $conf) = @_;
+#     return $conf->{unprivileged} ? '' : 'lxc/';
+# }
+sub devttydir {
+    return '';
+}
 1;
