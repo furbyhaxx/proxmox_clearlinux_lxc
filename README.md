@@ -1,11 +1,19 @@
-# path to overwrite
-/usr/share/perl5/PVE/LXC/
+## What is this
+<p>A patch for Proxmox which allows the use of ClearLinux LXC templates<br>
+</p>
+[LXC templates](https://github.com/furbyhaxx/clearlinux_lxc/)
 
-tested on pve 8.1.3
+## Tested on
+Proxmox 8.1.3 but should at least work on all PVE 8 versions.
 
-need to write a script to change the pve files
+## Installation 
+The installation is done via the CLI utility. Run the following commands on the PVE node.
 
-generate a rootfs tarball with clearlinux_lxc and place it at /var/lib/vz/template/cache/
-
-as far as I tested, everything works except the tty from the web ui, pct enter works. create the CT from the commandline like in the script ct_create.sh
-
+```
+~# wget https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/install.sh
+~# bash install.sh
+```
+Or this one liner
+```
+bash <(curl -s https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/install.sh )
+```

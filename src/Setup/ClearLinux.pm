@@ -11,38 +11,25 @@ use PVE::LXC::Setup::Debian;
 
 use base qw(PVE::LXC::Setup::Debian);
 
-my $known_versions = {
-    '37180' => 1,
-    '38990' => 1,
-    '39530' => 1,
-    '40040' => 1,
-    '40450' => 1,
-};
-
 sub new {
     my ($class, $conf, $rootdir) = @_;
 
     my $os_release = "$rootdir/etc/os-release";
     my $os_info = PVE::Tools::file_get_contents($os_release);
 
-    # die "got unknown DISTRIB_ID\n" if $lsbinfo !~ m/^DISTRIB_ID=ClearLinux$/mi;
-
     my $version;
 	$version = "40450";
-    # if ($lsbinfo =~ m/^DISTRIB_RELEASE=(\d+\.\d+)$/mi) {
-	# $version = $1;
-    # }
-
-    # die "unable to read version info\n" if !defined($version);
-
-    # die "unsupported ClearLinux version '$version'\n"
-	# if !$known_versions->{$version};
 
     my $self = { conf => $conf, rootdir => $rootdir, version => $version };
 
     $conf->{ostype} = "ClearLinux";
 
     return bless $self, $class;
+}
+
+# ClearLinux doesn't support the /dev/lxc/ subdirectory.
+sub devttydir {
+    return '';
 }
 
 sub template_fixup {
@@ -81,7 +68,7 @@ sub setup_init {
 	$self->setup_systemd_preset({ 'systemd-networkd.service' => 1 });
 
     # setup getty service
-    $self->setup_container_getty_service($conf);
+    # $self->setup_container_getty_service($conf);
 }
 
 sub setup_network {
@@ -92,13 +79,4 @@ sub setup_network {
 	$self->setup_systemd_networkd($conf);
 }
 
-# A few distros as well as unprivileged containers cannot deal with the
-# /dev/lxc/ tty subdirectory.
-# sub devttydir {
-#     my ($self, $conf) = @_;
-#     return $conf->{unprivileged} ? '' : 'lxc/';
-# }
-sub devttydir {
-    return '';
-}
 1;
