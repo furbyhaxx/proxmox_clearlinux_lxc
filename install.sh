@@ -35,7 +35,7 @@ fi
 
 if ! test -f "$CLEARLINUX_FILE"; then
     # copy ClearLinux.pm
-    curl -K "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/src/Setup/ClearLinux.pm" -o $CLEARLINUX_FILE
+    curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/src/Setup/ClearLinux.pm" -o $CLEARLINUX_FILE
 fi
 
 # restart pve-manager to use changes
