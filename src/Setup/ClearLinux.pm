@@ -40,6 +40,12 @@ sub template_fixup {
     # create basic config directories not preset in cl due to stateless design
     $self->ct_mkdir('/etc/systemd', 0755);
     $self->ct_mkdir('/etc/systemd/system', 0755);
+    $self->ct_mkdir('/etc/systemd/system/multi-user.target.wants', 0755);
+
+    PVE::Tools::mknod('/dev/tty1', 136, 1);
+    #$self->ct_symlink('/lib/systemd/system/container-getty@.service', '/etc/systemd/system/multi-user.target.wants/systemd-networkd.service');
+
+    
 
     # create empty shadow file to set root password
     $self->ct_file_set_contents('/etc/shadow', '');
