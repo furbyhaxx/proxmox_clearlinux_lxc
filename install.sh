@@ -33,10 +33,12 @@ if ! grep -q clear-linux-os "$SETUP_FILE"; then
     sed -i $'/.*unmanaged =>.*/i clear => \'PVE::LXC::Setup::ClearLinux\',' $SETUP_FILE
 fi
 
-if ! test -f "$CLEARLINUX_FILE"; then
-    # copy ClearLinux.pm
-    curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/src/Setup/ClearLinux.pm" -o $CLEARLINUX_FILE
+if test -f "$CLEARLINUX_FILE"; then
+    echo "Removing old ClearLinux.pm"
+    
 fi
+echo "Installing ClearLinux.pm"
+curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/src/Setup/ClearLinux.pm" -o $CLEARLINUX_FILE
 
 # restart pve-manager to use changes
 systemctl restart pvedaemon.service
