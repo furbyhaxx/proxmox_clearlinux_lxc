@@ -21,4 +21,5 @@ curl -s https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/
 ```
 ## Bugs
 - Privileged containers need to manually set "nesting=1" or systemd is not working
+- Snapshots not working (GUI shows 'The current guest configuration does not support taking new snapshots')
 - ~~cmode=shell is needed as it always created links to /dev/lxc/ttyN instead of /dev/ttyN and I have no idea why~~ the /etc/systemd/system/getty.target.wants/ folder was missing
