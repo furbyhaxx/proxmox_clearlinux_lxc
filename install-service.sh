@@ -29,13 +29,19 @@ if ! [ -f ${SCRIPT_FILE} ]; then
     $SUDO chmod +x ${SCRIPT_FILE}
 fi
 
+if [ -f $UNIT_FILE ]; then
+   $SUDO systemctl disable pve-cclxc-patcher.service
+   $SUDO systemctl stop pve-cclxc-patcher.service
+   $SUDO rm -f $UNIT_FILE
+fi
+
 $SUDO tee -a "${UNIT_FILE}" >/dev/null <<-EOF
 [Unit]
 Description=Patch pve sources to allow clearlinux LXCs and persist after an update.
 Before=pve-manager.service
 
 [Service]
-ExecStart=/path/to/run/once/script.sh
+ExecStart=/usr/share/pve-cc-patcher.sh
 RemainAfterExit=true
 Type=oneshot
 
@@ -46,3 +52,4 @@ EOF
 
 $SUDO systemctl daemon-reload
 $SUDO systemctl enable --now pve-cclxc-patcher.service
+

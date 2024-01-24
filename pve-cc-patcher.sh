@@ -50,7 +50,7 @@ if ! grep -q clear-linux-os "$SETUP_FILE"; then
     echo -e "${GRN}${CHECKMARK} patched Setup.pm${CR}"
 fi
 
-if test -f "$CLEARLINUX_FILE"; then
+if [ -f "$CLEARLINUX_FILE" ]; then
    $SUDO rm -f "${CLEARLINUX_FILE}"
    echo -e "${GRN}${CHECKMARK} removed old Clearlinux.pm file ${CR}"
 fi
@@ -59,8 +59,7 @@ $SUDO curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/m
 
 PVEMANAGER_STATUS=$(systemctl status pve-manager | grep "Active:" | awk '{print $2}')
 
-if [ "$PVEMANAGER_STATUS" -eq "active"]
-then
+if [ "$PVEMANAGER_STATUS" -eq "active" ]; then
    $SUDO systemctl restart pvedaemon.service
    echo -e "${GRN}${CHECKMARK} pve-manager restarted, changes now active ${CR}"
 fi
