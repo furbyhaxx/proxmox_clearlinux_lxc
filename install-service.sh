@@ -24,8 +24,17 @@ if ! [ -d ${SCRIPT_PATH} ]; then
     $SUDO mkdir -p $SCRIPT_PATH
 fi
 
-if ! [ -f ${SCRIPT_FILE} ]; then
+if [ -f ${SCRIPT_FILE} ]; then
+    $SUDO rm -f ${SCRIPT_FILE}
+fi
+
+if ! [ -f ./pve-cc-patcher.sh ]; then
     $SUDO curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/main/pve-cc-patcher.sh" -o $SCRIPT_FILE
+    $SUDO chmod +x ${SCRIPT_FILE}
+    echo "grabbin pve-cc-patcher.sh from github"
+else
+    echo "using local pve-cc-patcher.sh file"
+    $SUDO cp ./pve-cc-patcher.sh ${SCRIPT_FILE}
     $SUDO chmod +x ${SCRIPT_FILE}
 fi
 

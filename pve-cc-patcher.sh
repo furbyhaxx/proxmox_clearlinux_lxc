@@ -59,7 +59,7 @@ $SUDO curl "https://raw.githubusercontent.com/furbyhaxx/proxmox_clearlinux_lxc/m
 
 PVEMANAGER_STATUS=$(systemctl status pve-manager | grep "Active:" | awk '{print $2}')
 
-if [ "$PVEMANAGER_STATUS" -eq "active" ]; then
+if [ "$PVEMANAGER_STATUS" = "active" ]; then
    $SUDO systemctl restart pvedaemon.service
    echo -e "${GRN}${CHECKMARK} pve-manager restarted, changes now active ${CR}"
 fi
